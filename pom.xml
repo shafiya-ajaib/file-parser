@@ -65,6 +65,10 @@
 			<scope>runtime</scope>
 			<version>8.0.33</version>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-csv</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

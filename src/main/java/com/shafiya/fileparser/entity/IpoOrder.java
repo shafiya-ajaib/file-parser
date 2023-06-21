@@ -104,4 +104,48 @@ public class IpoOrder implements Serializable {
     public BigDecimal getAllocatedTotal() {
         return allocatedTotal;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setInvestorName(String investorName) {
+        this.investorName = investorName;
+    }
+
+    public void setSid(String sid) {
+        this.sid = sid;
+    }
+
+    public void setBookPrice(BigDecimal bookPrice) {
+        this.bookPrice = bookPrice;
+    }
+
+    public void setBookQty(BigDecimal bookQty) {
+        this.bookQty = bookQty;
+    }
+
+    public void setBookTotal(BigDecimal bookTotal) {
+        this.bookTotal = bookTotal;
+    }
+
+    public void setOfferingPrice(BigDecimal offeringPrice) {
+        this.offeringPrice = offeringPrice;
+    }
+
+    public void setOfferingQty(BigDecimal offeringQty) {
+        this.offeringQty = offeringQty;
+    }
+
+    public void setOfferingTotal(BigDecimal offeringTotal) {
+        this.offeringTotal = offeringTotal;
+    }
+
+    public void setAllocatedQty(BigDecimal allocatedQty) {
+        this.allocatedQty = allocatedQty;
+    }
+
+    public void setAllocatedTotal(BigDecimal allocatedTotal) {
+        this.allocatedTotal = allocatedTotal;
+    }
 }
