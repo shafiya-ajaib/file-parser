@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @Table(IpoOrder.TABLE_NAME)
 public class IpoOrder implements Serializable {
     public static final String TABLE_NAME = "ipo_order";
-    private static  final String ID = "id";
+    private static final String ID = "id";
     private static final String INVESTOR_NAME = "investor_name";
     private static final String SID = "sid";
     private static final String BOOK_PRICE = "book_price";
@@ -60,4 +60,48 @@ public class IpoOrder implements Serializable {
 
     @Column(ALLOTMENT_TOTAL)
     private BigDecimal allocatedTotal;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getInvestorName() {
+        return investorName;
+    }
+
+    public String getSid() {
+        return sid;
+    }
+
+    public BigDecimal getBookPrice() {
+        return bookPrice;
+    }
+
+    public BigDecimal getBookQty() {
+        return bookQty;
+    }
+
+    public BigDecimal getBookTotal() {
+        return bookTotal;
+    }
+
+    public BigDecimal getOfferingPrice() {
+        return offeringPrice;
+    }
+
+    public BigDecimal getOfferingQty() {
+        return offeringQty;
+    }
+
+    public BigDecimal getOfferingTotal() {
+        return offeringTotal;
+    }
+
+    public BigDecimal getAllocatedQty() {
+        return allocatedQty;
+    }
+
+    public BigDecimal getAllocatedTotal() {
+        return allocatedTotal;
+    }
 }

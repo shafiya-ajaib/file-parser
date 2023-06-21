@@ -8,6 +8,7 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 
 @RestController
@@ -16,8 +17,11 @@ public class CsvUploadController {
     private CsvUploadService csvUploadService;
 
     @PostMapping(path = "/upload", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<String> uploadCsv(@RequestPart(value="file") FilePart file) {
-        csvUploadService.uploadCsv(file);
-        return ResponseEntity.ok("Success");
+    public Mono<ResponseEntity<String>> uploadCsv(@RequestPart(value="file") FilePart file) {
+        return csvUploadService.uploadCsv(file).map(ResponseEntity::ok)
+                .onErrorResume(e -> {
+                    String errorMessage = e.getMessage();
+                    return Mono.just(ResponseEntity.internalServerError().body(errorMessage));
+                });
     }
 }
