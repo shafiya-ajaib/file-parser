@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 @Table(IpoOrder.TABLE_NAME)
 public class IpoOrder implements Serializable {
     public static final String TABLE_NAME = "ipo_order";
-    private static final String ID = "id";
     private static final String INVESTOR_NAME = "investor_name";
     private static final String SID = "sid";
     private static final String BOOK_PRICE = "book_price";
@@ -60,92 +59,4 @@ public class IpoOrder implements Serializable {
 
     @Column(ALLOTMENT_TOTAL)
     private BigDecimal allocatedTotal;
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getInvestorName() {
-        return investorName;
-    }
-
-    public String getSid() {
-        return sid;
-    }
-
-    public BigDecimal getBookPrice() {
-        return bookPrice;
-    }
-
-    public BigDecimal getBookQty() {
-        return bookQty;
-    }
-
-    public BigDecimal getBookTotal() {
-        return bookTotal;
-    }
-
-    public BigDecimal getOfferingPrice() {
-        return offeringPrice;
-    }
-
-    public BigDecimal getOfferingQty() {
-        return offeringQty;
-    }
-
-    public BigDecimal getOfferingTotal() {
-        return offeringTotal;
-    }
-
-    public BigDecimal getAllocatedQty() {
-        return allocatedQty;
-    }
-
-    public BigDecimal getAllocatedTotal() {
-        return allocatedTotal;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setInvestorName(String investorName) {
-        this.investorName = investorName;
-    }
-
-    public void setSid(String sid) {
-        this.sid = sid;
-    }
-
-    public void setBookPrice(BigDecimal bookPrice) {
-        this.bookPrice = bookPrice;
-    }
-
-    public void setBookQty(BigDecimal bookQty) {
-        this.bookQty = bookQty;
-    }
-
-    public void setBookTotal(BigDecimal bookTotal) {
-        this.bookTotal = bookTotal;
-    }
-
-    public void setOfferingPrice(BigDecimal offeringPrice) {
-        this.offeringPrice = offeringPrice;
-    }
-
-    public void setOfferingQty(BigDecimal offeringQty) {
-        this.offeringQty = offeringQty;
-    }
-
-    public void setOfferingTotal(BigDecimal offeringTotal) {
-        this.offeringTotal = offeringTotal;
-    }
-
-    public void setAllocatedQty(BigDecimal allocatedQty) {
-        this.allocatedQty = allocatedQty;
-    }
-
-    public void setAllocatedTotal(BigDecimal allocatedTotal) {
-        this.allocatedTotal = allocatedTotal;
-    }
 }

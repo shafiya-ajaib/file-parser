@@ -55,10 +55,11 @@
 			<artifactId>lombok</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.asyncer</groupId>
+			<groupId>dev.miku</groupId>
 			<artifactId>r2dbc-mysql</artifactId>
-			<version>0.9.3</version>
+			<version>0.8.2.RELEASE</version>
 		</dependency>
+
 		<dependency>
 			<artifactId>mysql-connector-java</artifactId>
 			<groupId>mysql</groupId>

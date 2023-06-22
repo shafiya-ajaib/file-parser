@@ -9,7 +9,6 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
@@ -23,10 +22,10 @@ public class CreateIpoOrderListenerImpl implements CreateIpoOrderListener {
 
     @Override
     @KafkaListener(topics = "com.shafiya.fileparser.CreateIpoOrder", groupId = "ipo-order123")
-    public Mono<Void> onReceive(String json,
-                                @Header(value = KafkaHeaders.DELIVERY_ATTEMPT, required = false) Integer deliveryAttempt,
-                                @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws JsonProcessingException {
+    public void onReceive(String json,
+                          @Header(value = KafkaHeaders.DELIVERY_ATTEMPT, required = false) Integer deliveryAttempt,
+                          @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws JsonProcessingException {
         IpoOrder ipoOrder = objectMapper.readValue(json, IpoOrder.class);
-        return createIpoOrderService.saveIfNotExist(ipoOrder);
+        createIpoOrderService.saveIfNotExist(ipoOrder);
     }
 }

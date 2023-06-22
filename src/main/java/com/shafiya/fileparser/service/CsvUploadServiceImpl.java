@@ -32,51 +32,62 @@ public class CsvUploadServiceImpl implements CsvUploadService {
     public Mono<String> uploadCsv(FilePart file) {
         return Mono.just(file)
                 .filter(filePart -> filePart.filename().endsWith(".csv"))
-                .flatMap(filePart -> {
-                    return DataBufferUtils.join(filePart.content())
-                            .flatMap(dataBuffer -> {
-                                try (InputStream inputStream = dataBuffer.asInputStream();
-                                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                .flatMap(filePart -> DataBufferUtils.join(filePart.content())
+                        .flatMap(dataBuffer -> {
+                            try (InputStream inputStream = dataBuffer.asInputStream();
+                                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
-                                    List<String> lines = reader.lines().collect(Collectors.toList());
+                                List<String> lines = reader.lines().collect(Collectors.toList());
 
-                                    return Flux.fromIterable(lines)
-                                            .skip(1) // Skip the header line
-                                            .flatMap(line -> {
-                                                String[] columns = line.split(",");
-                                                String investorName = columns[0];
-                                                String sid = columns[1];
-                                                BigDecimal bookPrice = parseBigDecimal(columns[2]);
-                                                BigDecimal bookQty = parseBigDecimal(columns[3]);
-                                                BigDecimal bookTotal = parseBigDecimal(columns[4]);
-                                                BigDecimal offeringPrice = parseBigDecimal(columns[5]);
-                                                BigDecimal offeringQty = parseBigDecimal(columns[6]);
-                                                BigDecimal offeringTotal = parseBigDecimal(columns[7]);
-                                                BigDecimal allotmentQty = parseBigDecimal(columns[8]);
-                                                BigDecimal allotmentTotal = parseBigDecimal(columns[9]);
+                                return Flux.fromIterable(lines)
+                                        .skip(1) // Skip the header line
+                                        .flatMap(line -> {
+                                            String[] columns = line.split(",");
+                                            String investorName = columns[0];
+                                            String sid = columns[1];
+                                            BigDecimal bookPrice;
+                                            BigDecimal bookQty;
+                                            BigDecimal bookTotal;
+                                            BigDecimal offeringPrice;
+                                            BigDecimal offeringQty;
+                                            BigDecimal offeringTotal;
+                                            BigDecimal allotmentQty;
+                                            BigDecimal allotmentTotal;
 
-                                                IpoOrder ipoOrder = new IpoOrder();
-                                                ipoOrder.setInvestorName(investorName);
-                                                ipoOrder.setSid(sid);
-                                                ipoOrder.setBookPrice(bookPrice);
-                                                ipoOrder.setBookQty(bookQty);
-                                                ipoOrder.setBookTotal(bookTotal);
-                                                ipoOrder.setOfferingPrice(offeringPrice);
-                                                ipoOrder.setOfferingQty(offeringQty);
-                                                ipoOrder.setOfferingTotal(offeringTotal);
-                                                ipoOrder.setAllocatedQty(allotmentQty);
-                                                ipoOrder.setAllocatedTotal(allotmentTotal);
+                                            try {
+                                                bookPrice = parseBigDecimal(columns[2]);
+                                                bookQty = parseBigDecimal(columns[3]);
+                                                bookTotal = parseBigDecimal(columns[4]);
+                                                offeringPrice = parseBigDecimal(columns[5]);
+                                                offeringQty = parseBigDecimal(columns[6]);
+                                                offeringTotal = parseBigDecimal(columns[7]);
+                                                allotmentQty = parseBigDecimal(columns[8]);
+                                                allotmentTotal = parseBigDecimal(columns[9]);
+                                            } catch (NumberFormatException e) {
+                                                return Mono.empty();
+                                            }
 
-                                                return this.createIpoOrderPublisher.publish(ipoOrder)
-                                                        .thenReturn("CSV data parsed successfully");
-                                            })
-                                            .collectList()
-                                            .thenReturn("CSV data parsed successfully");
-                                } catch (IOException e) {
-                                    return Mono.error(new IllegalStateException("Error reading CSV file", e));
-                                }
-                            });
-                })
+                                            IpoOrder ipoOrder = new IpoOrder();
+                                            ipoOrder.setInvestorName(investorName);
+                                            ipoOrder.setSid(sid);
+                                            ipoOrder.setBookPrice(bookPrice);
+                                            ipoOrder.setBookQty(bookQty);
+                                            ipoOrder.setBookTotal(bookTotal);
+                                            ipoOrder.setOfferingPrice(offeringPrice);
+                                            ipoOrder.setOfferingQty(offeringQty);
+                                            ipoOrder.setOfferingTotal(offeringTotal);
+                                            ipoOrder.setAllocatedQty(allotmentQty);
+                                            ipoOrder.setAllocatedTotal(allotmentTotal);
+
+                                            return this.createIpoOrderPublisher.publish(ipoOrder)
+                                                    .thenReturn("CSV data parsed successfully");
+                                        })
+                                        .collectList()
+                                        .thenReturn("CSV data parsed successfully");
+                            } catch (IOException e) {
+                                return Mono.error(new IllegalStateException("Error reading CSV file", e));
+                            }
+                        }))
                 .switchIfEmpty(Mono.defer(() -> {
                     String errorMessage = "File is not a CSV";
                     this.logger.error(errorMessage);
@@ -84,9 +95,13 @@ public class CsvUploadServiceImpl implements CsvUploadService {
                 }));
     }
 
-    private BigDecimal parseBigDecimal(String value) {
+    private BigDecimal parseBigDecimal(String value) throws NumberFormatException {
         if (value != null && !value.isEmpty()) {
-            return new BigDecimal(value);
+            try {
+                return new BigDecimal(value);
+            } catch (NumberFormatException e) {
+                throw new NumberFormatException("Invalid numeric value: " + value);
+            }
         }
         return null;
     }
