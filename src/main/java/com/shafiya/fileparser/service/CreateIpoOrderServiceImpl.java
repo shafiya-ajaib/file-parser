@@ -16,13 +16,7 @@ public class CreateIpoOrderServiceImpl implements CreateIpoOrderService {
     @Override
     public void saveIfNotExist(IpoOrder ipoOrder) {
         this.ipoOrderRepository.findBySid(ipoOrder.getSid())
-                .flatMap(existingUser -> {
-                    System.out.println("User with ID already exists");
-                    return Mono.error(new IllegalStateException("User with ID already exists"));
-                })
-                .switchIfEmpty(this.ipoOrderRepository.save(ipoOrder)
-                        .doOnSuccess(savedOrder -> System.out.println("Order saved successfully: " + savedOrder))
-                        .doOnError(error -> System.out.println("Error occurred while saving order: " + error)))
+                .switchIfEmpty(this.ipoOrderRepository.save(ipoOrder))
                 .subscribe();
     }
 }
