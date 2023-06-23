@@ -80,10 +80,10 @@ public class CsvUploadServiceImpl implements CsvUploadService {
                                             ipoOrder.setAllocatedTotal(allotmentTotal);
 
                                             return this.createIpoOrderPublisher.publish(ipoOrder)
-                                                    .thenReturn("CSV data parsed successfully");
+                                                    .thenReturn(1);
                                         })
-                                        .collectList()
-                                        .thenReturn("CSV data parsed successfully");
+                                        .reduce(0, Integer::sum)
+                                        .map(count -> "Successfully uploading " + count + " data");
                             } catch (IOException e) {
                                 return Mono.error(new IllegalStateException("Error reading CSV file", e));
                             }

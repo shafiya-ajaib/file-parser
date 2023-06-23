@@ -25,7 +25,11 @@ public class CreateIpoOrderListenerImpl implements CreateIpoOrderListener {
     public void onReceive(String json,
                           @Header(value = KafkaHeaders.DELIVERY_ATTEMPT, required = false) Integer deliveryAttempt,
                           @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws JsonProcessingException {
-        IpoOrder ipoOrder = objectMapper.readValue(json, IpoOrder.class);
-        createIpoOrderService.saveIfNotExist(ipoOrder);
+        try {
+            IpoOrder ipoOrder = objectMapper.readValue(json, IpoOrder.class);
+            createIpoOrderService.saveIfNotExist(ipoOrder);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }
