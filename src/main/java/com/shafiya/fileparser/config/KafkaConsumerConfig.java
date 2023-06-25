@@ -1,5 +1,6 @@
 package com.shafiya.fileparser.config;
 
+import com.shafiya.fileparser.constant.MessageConstant;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,6 @@ public class KafkaConsumerConfig {
     }
 
     private TopicPartition getDltTopicPartition(ConsumerRecord<?, ?> record, Exception err) {
-        return new TopicPartition("com.shafiya.fileparser.CreateIpoOrder.DLT", 0);
+        return new TopicPartition(MessageConstant.CREATE_IPO_ORDER_DLT, 0);
     }
 }

@@ -1,6 +1,7 @@
 package com.shafiya.fileparser.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.shafiya.fileparser.constant.MessageConstant;
 import com.shafiya.fileparser.entity.IpoOrder;
 import com.shafiya.fileparser.service.CreateIpoOrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ public class CreateIpoOrderListenerImpl implements CreateIpoOrderListener {
     }
 
     @Override
-    @KafkaListener(topics = "com.shafiya.fileparser.CreateIpoOrder", groupId = "ipo-order123")
+    @KafkaListener(topics = MessageConstant.CREATE_IPO_ORDER, groupId = "ipo-order123")
     public void onReceive(String json,
                           @Header(value = KafkaHeaders.DELIVERY_ATTEMPT, required = false) Integer deliveryAttempt,
                           @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws JsonProcessingException {

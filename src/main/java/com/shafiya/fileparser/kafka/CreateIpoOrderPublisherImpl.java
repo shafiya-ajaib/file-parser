@@ -1,6 +1,7 @@
 package com.shafiya.fileparser.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shafiya.fileparser.constant.MessageConstant;
 import com.shafiya.fileparser.entity.IpoOrder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ public class CreateIpoOrderPublisherImpl implements CreateIpoOrderPublisher{
     @SneakyThrows
     public Mono<Boolean> publish(IpoOrder message) {
         return Mono.fromCallable(
-                        () -> this.kafkaTemplate.send("com.shafiya.fileparser.CreateIpoOrder",
+                        () -> this.kafkaTemplate.send(MessageConstant.CREATE_IPO_ORDER,
                                 objectMapper.writeValueAsString(message)))
                 .thenReturn(Boolean.TRUE);
     }
