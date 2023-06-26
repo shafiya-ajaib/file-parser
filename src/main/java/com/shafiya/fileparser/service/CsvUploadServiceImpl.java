@@ -34,9 +34,7 @@ public class CsvUploadServiceImpl implements CsvUploadService {
                 .filter(filePart -> filePart.filename().endsWith(".csv"))
                 .flatMap(filePart -> DataBufferUtils.join(filePart.content())
                         .flatMap(dataBuffer -> {
-                            try (InputStream inputStream = dataBuffer.asInputStream();
-                                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-
+                            try (InputStream inputStream = dataBuffer.asInputStream(); BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
                                 List<String> lines = reader.lines().collect(Collectors.toList());
 
                                 return Flux.fromIterable(lines)
@@ -80,9 +78,11 @@ public class CsvUploadServiceImpl implements CsvUploadService {
                                             ipoOrder.setAllocatedTotal(allotmentTotal);
 
                                             return this.createIpoOrderPublisher.publish(ipoOrder)
-                                                    .thenReturn(1);
+                                                    .thenReturn(true)
+                                                    .onErrorReturn(false);
                                         })
-                                        .reduce(0, Integer::sum)
+                                        .collectList()
+                                        .map(list -> list.stream().filter(Boolean::booleanValue).count())
                                         .map(count -> "Successfully uploading " + count + " data");
                             } catch (IOException e) {
                                 return Mono.error(new IllegalStateException("Error reading CSV file", e));

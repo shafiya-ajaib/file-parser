@@ -26,13 +26,6 @@ public class KafkaProducerConfig {
     }
 
     private ProducerFactory<String, String> producerFactory() {
-        String kafkaBrokerList =
-                StringUtils.collectionToCommaDelimitedString(kafkaProperties.getBootstrapServers());
-        Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBrokerList);
-        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-
-        return new DefaultKafkaProducerFactory<>(configProps);
+        return new DefaultKafkaProducerFactory<>(kafkaProperties.buildProducerProperties());
     }
 }
